@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express()
+app.use(express.static('dist'));
 
 const cores = require('cors')
 app.use(cores())
