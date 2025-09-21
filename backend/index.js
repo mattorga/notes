@@ -1,32 +1,11 @@
+require('dotenv').config()
 const express = require('express')
+const Note = require('./models/note')
+
 const app = express()
-app.use(express.static('dist'));
 
 const cores = require('cors')
 app.use(cores())
-
-let notes = [
-    {
-        id: "1",
-        content: "HTML is easy",
-        important: true
-    },
-    {
-        id: "2",
-        content: "Browser can execute only JavaScript",
-        important: false
-    },
-    {
-        id: "3",
-        content: "GET and POST are the most important methods of HTTP protocol",
-        important: true
-    },
-    {
-        id: "4",
-        content: "Matthew Test",
-        important: true
-    }
-]
 
 // Middleware function
 const requestLogger = (request, response, next) => {
@@ -46,7 +25,9 @@ app.get('/', (request, response) => {
 })
 
 app.get('/api/notes', (request, response) => {
+  Note.find({}).then(notes => {
     response.json(notes)
+  })
 })
 
 app.get('/api/notes/:id', (request, response) => {
@@ -101,7 +82,7 @@ const unknownEndpoint = (request, response) => {
 }
 app.use(unknownEndpoint)
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`)
 })
