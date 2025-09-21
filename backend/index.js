@@ -3,6 +3,7 @@ const express = require('express')
 const Note = require('./models/note')
 
 const app = express()
+app.use(express.static('dist'))
 
 const cores = require('cors')
 app.use(cores())
@@ -64,14 +65,15 @@ app.post('/api/notes', (request, response) => {
         })
     }
 
-    const note = {
+    const note = new Note({
         content: body.content,
         important: body.important || false,
-        id: generateId(),
-    }
+    })
 
-    notes = notes.concat(note)
-    response.json(note)
+    note.save()
+        .then(savedNote => {
+        response.json(savedNote) 
+    })
 })
 
 // Middleware function
